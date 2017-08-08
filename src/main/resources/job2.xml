@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/batch"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/batch
+           http://www.springframework.org/schema/batch/spring-batch.xsd">
+ 
+	<job id="job2" job-repository="jobRepository">
+		<step id="step2">
+			<tasklet>
+				<chunk reader="itemReader2" processor="employeeProcessor" writer="employeeWriter" commit-interval="1" />
+			</tasklet>
+		</step>
+	</job>
+	
+	<beans:bean id="itemReader2" class="org.springframework.batch.item.database.JdbcCursorItemReader" scope="step">
+		<beans:property name="dataSource" ref="oracleDataSource" />
+		<beans:property name="sql" value="select EMPLOYEE_ID, FIRST_NAME, NAME from Employees where FIRST_NAME = 'BERNARD'"/>
+		<beans:property name="rowMapper">
+			<beans:bean class="org.mordeth.multiTenantBatch.mapper.EmployeeMapper" />
+		</beans:property>
+  	</beans:bean>
+	
+	
+ 
+</beans:beans>
